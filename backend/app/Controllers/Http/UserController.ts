@@ -9,7 +9,7 @@ export interface PostRequest{
     isAdmin? : boolean
 }      
 
-export default class PostsController {
+export default class UserController {
     public async index(){
         return "Hello"
     }
