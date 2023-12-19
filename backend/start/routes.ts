@@ -20,7 +20,14 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import PostsController from 'App/Controllers/Http/PostsController'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import RegisterValidator  from 'App/Validators/RegisterValidator'
 
 Route.get('/', async () => {
   return new PostsController().index()
+})
+
+Route.post('/', async ({request} : HttpContextContract) => {
+  const data = await request.validate(RegisterValidator)
+  return new PostsController().post(data)
 })
