@@ -2,7 +2,6 @@ version: '3.8'
 name: finance-app
 
 services:
-
   adonis_app:
     container_name: adonis_app
     restart: always
@@ -20,9 +19,12 @@ services:
       - PG_HOST=${DB_HOST}
     volumes:
       - ./:/home/node/app
-    command: dumb-init node ace serve --watch --node-args="--inspect=0.0.0.0"
+      - node_modules:/home/node/app/node_modules
+    command: dumb-init npm run start
+    networks:
+      - finance_network
 
-  db: 
+  db:
     image: postgres:10-alpine
     ports:
       - "${DB_PORT}:${DB_PORT}"
@@ -30,14 +32,23 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
+    networks:
+      - finance_network
+
   admin:
     image: adminer
     restart: always
-    depends_on: 
+    depends_on:
       - db
     ports:
       - 8080:8080
-    
+    networks:
+      - finance_network
+
+networks:
+  finance_network:
 
 volumes:
   postgres_volume:
+  node_modules:
+
